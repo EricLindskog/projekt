@@ -1,0 +1,22 @@
+[1mdiff --git a/Pro_Jekt/.classpath b/Pro_Jekt/.classpath[m
+[1mindex fceb480..a661d1d 100644[m
+[1m--- a/Pro_Jekt/.classpath[m
+[1m+++ b/Pro_Jekt/.classpath[m
+[36m@@ -2,5 +2,6 @@[m
+ <classpath>[m
+ 	<classpathentry kind="src" path="src"/>[m
+ 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>[m
+[32m+[m	[32m<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>[m
+ 	<classpathentry kind="output" path="bin"/>[m
+ </classpath>[m
+[1mdiff --git a/Pro_Jekt/src/main/runner.java b/Pro_Jekt/src/main/runner.java[m
+[1mindex 000c8b0..6b29980 100644[m
+[1m--- a/Pro_Jekt/src/main/runner.java[m
+[1m+++ b/Pro_Jekt/src/main/runner.java[m
+[36m@@ -3,5 +3,6 @@[m [mpackage main;[m
+ public class runner {[m
+ 	public static void Main (String[] args){[m
+ 		System.out.println("Hello world");[m
+[32m+[m		[32m//tjatja[m
+ 	}[m
+ }[m
