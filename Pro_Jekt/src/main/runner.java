@@ -5,5 +5,6 @@ public class runner {
 		System.out.println("Hello world");
 		//tjatja
 		//hej hej
+		//Nהההה
 	}
 }
