@@ -2,7 +2,7 @@ package die;
 
 import java.util.Random;
 
-public class Die {
+public class Die implements Comparable<Die> {
 	private int value;
 	Random roll = new Random();
 	public void roll(){
@@ -10,11 +10,16 @@ public class Die {
 		setValue(roll.nextInt(5)+1);
 	}
 
-	private int getValue() {
+	public int getValue() {
 		return value;
 	}
 
-	private void setValue(int value) {
+	public void setValue(int value) {
 		this.value = value;
+	}
+	
+	public int compareTo(Die arg0) {
+		
+		return Integer.compare(getValue(), arg0.getValue());
 	}
 }

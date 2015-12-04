@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class runner {
 	public static void main (String[] args){
+		
 		System.out.println("Hello world");
 		Scanner s = new Scanner(System.in);
 		Yatzy game = new Yatzy();
