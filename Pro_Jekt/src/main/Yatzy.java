@@ -3,15 +3,18 @@ package main;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import combinations.Combinations;
 import die.Die;
@@ -41,36 +44,37 @@ public class Yatzy {
 			int JFrameX=700;
 			int JFrameY=500;
 			
-			
-			
 			JPanel panel1 = new JPanel();
 			JPanel panel2 = new JPanel();
+			Dimension P1P2Dim = new Dimension(350,500);
+			Dimension FrameDim = new Dimension(700,500);
 			
 			AbstractButton button = new JButton();
-			
+			frame.setUndecorated(true);
 			frame.setVisible(true);
-			frame.setSize(JFrameX, JFrameY);
+			frame.setSize(FrameDim);
 			frame.setResizable(false);
-			frame.setLayout(new FlowLayout());
+			frame.setLayout(new FlowLayout(FlowLayout.LEFT));
+			
+			
+			
 			
 			panel1.setLocation(0, 0);
-			panel1.setBackground(Color.WHITE);
-			panel1.setSize(350, 700);
-			panel1.setLayout(new FlowLayout());
-			panel1.setAlignmentX(FlowLayout.RIGHT);
+			panel1.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+			panel1.setBackground(Color.CYAN);
+			panel1.setPreferredSize(P1P2Dim);
 			
 			panel2.setLocation(350, 0);
+			panel2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 			panel2.setBackground(Color.WHITE);
-			panel2.setSize(350, 700);
-			panel2.setLayout(new FlowLayout());
-			panel2.setAlignmentX(FlowLayout.RIGHT);
+			panel2.setPreferredSize(P1P2Dim);
 			
 			button.setVisible(true);
 			button.setLocation(50,50);
 			
 			frame.add(panel1);
 			frame.add(panel2);
-			panel1.add(button);
+			//panel1.add(button);
 			
 			for (int i = 0; i < dice.size(); i++) {
 				dice.get(i).roll();
