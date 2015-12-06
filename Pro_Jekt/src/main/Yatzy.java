@@ -51,7 +51,8 @@ public class Yatzy {
 			JPanel panel1 = new JPanel();
 			JPanel panel2 = new JPanel();
 			Dimension P1P2Dim = new Dimension(350,500);
-			Dimension FrameDim = new Dimension(700,500);
+			Dimension FrameDim = new Dimension(800,500);
+			Dimension p2 =new Dimension(150,500);
 			
 			ArrayList <CombButton>combs = new ArrayList<CombButton>();
 			combs = CombButtons.getButtons();
@@ -73,8 +74,8 @@ public class Yatzy {
 			
 			panel2.setLocation(350, 0);
 			panel2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-			panel2.setBackground(Color.WHITE);
-			panel2.setPreferredSize(P1P2Dim);
+			panel2.setBackground(Color.CYAN);
+			panel2.setPreferredSize(p2);
 			
 			button.setVisible(true);
 			button.setLocation(50,50);
@@ -93,7 +94,8 @@ public class Yatzy {
 				});
 				combs.get(i).setLocation(50, 50*(i+1));
 				combs.get(i).setVisible(true);
-				panel1.add(combs.get(i));
+				combs.get(i).reset();
+				panel2.add(combs.get(i));
 			}
 			panel1.add(button);
 			
