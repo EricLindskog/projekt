@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import combinations.CombButton;
+import combinations.CombButtons;
 import combinations.Combinations;
 import die.Die;
 import participant.Bot;
@@ -49,6 +51,9 @@ public class Yatzy {
 			Dimension P1P2Dim = new Dimension(350,500);
 			Dimension FrameDim = new Dimension(700,500);
 			
+			ArrayList <CombButton>combs = new ArrayList<CombButton>();
+			
+			combs = CombButtons.getButtons();
 			AbstractButton button = new JButton();
 			frame.setUndecorated(true);
 			frame.setVisible(true);
@@ -78,10 +83,20 @@ public class Yatzy {
 			
 			for (int i = 0; i < dice.size(); i++) {
 				dice.get(i).roll();
+				dice.get(i).setValue(1);
 				System.out.println(dice.get(i).getValue());
 			}
+			
+			//test stuff
+			dice.get(0).setValue(6);
+			dice.get(1).setValue(4);
+			dice.get(2).setValue(2);
+			dice.get(3).setValue(3);
+			dice.get(4).setValue(5);
 			System.out.println("fdadfsdfds");
 			checkCombs();
+			combs.get(11).calculate(dice);
+			//End of test stuff
 	}
 	public EnumSet<Combinations> checkCombs(){
 		EnumSet<Combinations> availableCombs = EnumSet.allOf(Combinations.class);
