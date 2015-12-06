@@ -29,6 +29,7 @@ import participant.Player;
 public class Yatzy {
 	ArrayList<Die>dice =new ArrayList<Die>();
 	ArrayList<Participant>parts = new ArrayList<Participant>();
+	ArrayList <CombButton>combs = new ArrayList<CombButton>();
 	public void run(int players,int bots){
 		for (int i = 0; i < players; i++) {
 			parts.add(new Player());
@@ -54,7 +55,7 @@ public class Yatzy {
 			Dimension FrameDim = new Dimension(800,500);
 			Dimension p2 =new Dimension(150,500);
 			
-			ArrayList <CombButton>combs = new ArrayList<CombButton>();
+			//ArrayList <CombButton>combs = new ArrayList<CombButton>();
 			combs = CombButtons.getButtons();
 			
 			AbstractButton button = new JButton();
@@ -98,23 +99,45 @@ public class Yatzy {
 				panel2.add(combs.get(i));
 			}
 			panel1.add(button);
-			
+			button.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent arg0) {
+					for (int i = 0; i < dice.size(); i++) {
+						dice.get(i).roll();
+					}
+					calculateCombs();
+					
+					
+				}
+				
+			});
 			for (int i = 0; i < dice.size(); i++) {
+				
 				dice.get(i).roll();
-				dice.get(i).setValue(1);
-				System.out.println(dice.get(i).getValue());
+				panel1.add(dice.get(i));
+				dice.get(i).addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						Object source = e.getSource();
+				        if (source instanceof JButton) {
+				            Die die = (Die)source;
+				            System.out.println(die.getValue());
+				        }
+					}
+				});
 			}
-			
+			calculateCombs();
 			//test stuff
-			dice.get(0).setValue(6);
-			dice.get(1).setValue(4);
-			dice.get(2).setValue(2);
-			dice.get(3).setValue(3);
-			dice.get(4).setValue(5);
+			
 			System.out.println("fdadfsdfds");
 			checkCombs();
 			combs.get(11).calculate(dice);
 			//End of test stuff
+	}
+	public void calculateCombs(){
+		Collections.sort(dice);
+		for(CombButton butt : combs){
+			butt.calculate(dice);
+		}
 	}
 	public EnumSet<Combinations> checkCombs(){
 		EnumSet<Combinations> availableCombs = EnumSet.allOf(Combinations.class);

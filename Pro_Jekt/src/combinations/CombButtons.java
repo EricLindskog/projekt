@@ -105,7 +105,6 @@ public class CombButtons {
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 
-			System.out.println(this.getText());
 		}
 		
 	};
@@ -117,13 +116,12 @@ public class CombButtons {
 				if(i<list.size()-1){
 					if(list.get(i).getValue()==list.get(i+1).getValue()){
 						score += list.get(i).getValue()*2;
-						i++;
+						i+=2;
 					}
 				}
 			}
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
-			System.out.println(this.getText());
 		}
 		
 	};
@@ -148,7 +146,7 @@ public class CombButtons {
 		public void calculate(ArrayList<Die> list) {
 			int score = 0;
 			for(int i=0; i<list.size();i++){
-				if(i<list.size()-2){
+				if(i<list.size()-3){
 					if(list.get(i).getValue()==list.get(i+3).getValue()){
 						score = list.get(i).getValue()*4;
 					}
@@ -177,7 +175,6 @@ public class CombButtons {
 			}
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
-			System.out.println(this.getText());
 		}
 		
 	};
@@ -198,7 +195,6 @@ public class CombButtons {
 			}
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
-			System.out.println(this.getText());
 		}
 		
 	};
@@ -220,7 +216,6 @@ public class CombButtons {
 			}
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
-			System.out.println(this.getText());
 		}
 		
 	};
@@ -233,7 +228,6 @@ public class CombButtons {
 			}
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
-			System.out.println(this.getText());
 		}
 		
 	};
@@ -246,7 +240,6 @@ public class CombButtons {
 			}
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
-			System.out.println(this.getText());
 		}
 	};
 	public static ArrayList<CombButton> getButtons(){

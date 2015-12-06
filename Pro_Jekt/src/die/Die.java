@@ -2,6 +2,7 @@ package die;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -14,12 +15,13 @@ public class Die extends JButton implements Comparable<Die> {
 	public void roll(){
 		
 		setValue(roll.nextInt(5)+1);
-		String path = "/src/assets/Sprite-000"+this.getValue();
+		String path = "/assets/die"+this.getValue()+".png";
+		System.out.println(path);
 		try {
-			Image img = ImageIO.read(getClass().getResource(path));
-			this.setIcon(new ImageIcon(img));
-		}catch (IOException ex) {
-			
+			URL imageUrl = this.getClass().getResource(path);
+			this.setIcon(new javax.swing.ImageIcon(imageUrl));
+		}catch (Exception ex) {
+			System.out.println("n‰‰");
 		}
 	}
 	
