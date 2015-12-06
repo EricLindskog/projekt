@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -52,8 +54,8 @@ public class Yatzy {
 			Dimension FrameDim = new Dimension(700,500);
 			
 			ArrayList <CombButton>combs = new ArrayList<CombButton>();
-			
 			combs = CombButtons.getButtons();
+			
 			AbstractButton button = new JButton();
 			frame.setUndecorated(true);
 			frame.setVisible(true);
@@ -79,7 +81,21 @@ public class Yatzy {
 			
 			frame.add(panel1);
 			frame.add(panel2);
-			//panel1.add(button);
+			for(int i =0; i<combs.size(); i++){
+				combs.get(i).addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						/*
+						 * The general action when a combButton is pressed
+						 * Maybe it should call another function to do the addition of
+						 * score and bonusscore?
+						 */
+					}
+				});
+				combs.get(i).setLocation(50, 50*(i+1));
+				combs.get(i).setVisible(true);
+				panel1.add(combs.get(i));
+			}
+			panel1.add(button);
 			
 			for (int i = 0; i < dice.size(); i++) {
 				dice.get(i).roll();
