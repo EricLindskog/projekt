@@ -27,10 +27,15 @@ import participant.Participant;
 import participant.Player;
 
 public class Yatzy {
+	static final int MAX_ROLLS_PER_ROUND = 3;
+	public int rounds = 15;
+	public int currentPart;
+	public int currentRolls=0;
+	public boolean roundRun=true;
 	ArrayList<Die>dice =new ArrayList<Die>();
 	ArrayList<Participant>parts = new ArrayList<Participant>();
 	ArrayList <CombButton>combs = new ArrayList<CombButton>();
-	public void run(int players,int bots){
+	public void start(int players,int bots){
 		for (int i = 0; i < players; i++) {
 			parts.add(new Player());
 		}
@@ -40,11 +45,11 @@ public class Yatzy {
 		for (int i = 0; i < 5; i++) {
 			dice.add(new Die());
 		}
-		startup();
-		
+		create();
+		run();
 		
 	}
-	public void startup(){
+	public void create(){
 			JFrame frame = new JFrame();
 			int JFrameX=700;
 			int JFrameY=500;
@@ -65,9 +70,6 @@ public class Yatzy {
 			frame.setResizable(false);
 			frame.setLayout(new FlowLayout(FlowLayout.LEFT));
 			
-			
-			
-			
 			panel1.setLocation(0, 0);
 			panel1.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 			panel1.setBackground(Color.CYAN);
@@ -86,11 +88,13 @@ public class Yatzy {
 			for(int i =0; i<combs.size(); i++){
 				combs.get(i).addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
-						/*
-						 * The general action when a combButton is pressed
-						 * Maybe it should call another function to do the addition of
-						 * score and bonusscore?
-						 */
+						Object source = e.getSource();
+				        if (source instanceof CombButton) {
+				            CombButton butt = (CombButton)source;
+				            if(butt.isClickable()){
+				            	calcPoints(butt.getPoints());
+				            }
+				        }
 					}
 				});
 				combs.get(i).setLocation(50, 50*(i+1));
@@ -102,18 +106,24 @@ public class Yatzy {
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent arg0) {
-					for (int i = 0; i < dice.size(); i++) {
-						dice.get(i).roll();
+					if(currentRolls<MAX_ROLLS_PER_ROUND){
+						for (int i = 0; i < dice.size(); i++) {
+							dice.get(i).roll();
+						}
+						currentRolls++;
+						calculateCombs();
 					}
-					calculateCombs();
-					
-					
+					else{
+						/*
+						 * Någon slags dialogruta som sägar att du inte får kasta igen
+						 */
+					}
 				}
 				
 			});
 			for (int i = 0; i < dice.size(); i++) {
-				
-				dice.get(i).roll();
+				//dice.get(i).roll();
+				dice.get(i).setValue(0);
 				panel1.add(dice.get(i));
 				dice.get(i).addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
@@ -126,19 +136,56 @@ public class Yatzy {
 				});
 			}
 			calculateCombs();
-			//test stuff
-			
-			System.out.println("fdadfsdfds");
-			checkCombs();
-			combs.get(11).calculate(dice);
-			//End of test stuff
+			resetCombs();
+	}
+	public void run(){
+		System.out.println(parts.size()+" spelare");
+		//boolean turn= true;
+		for(int r= 0; r<rounds;r++){
+			for (int i = 0; i < parts.size(); i++) {
+				currentPart=i;
+				System.out.println("Spelare; "+(currentPart+1)+" tur");
+				while(roundRun){
+					//Fastnar tills falskt
+					//System.out.println("stuck?");
+				}
+				System.out.println("Jag Borde komma hit");
+				currentRolls=0;
+				roundRun=true;
+			}
+		}
 	}
 	public void calculateCombs(){
 		Collections.sort(dice);
 		for(CombButton butt : combs){
-			butt.calculate(dice);
+			
+			if(parts.get(currentPart).getCombs().contains(butt.getComb())){
+				butt.calculate(dice);
+				butt.setClickable(true);
+			}
+			else{butt.reset();}
+			
 		}
 	}
+	public void resetCombs(){
+		for(CombButton butt : combs){
+			butt.reset();
+		}
+	}
+	public void resetDice(){
+		for(Die die : dice){
+			die.setValue(0);
+		}
+	}
+	public void calcPoints(int points){
+		parts.get(currentPart).addScore(points);
+		System.out.println("hej");
+		roundRun =false;
+		resetCombs();
+		resetDice();
+		
+	}
+	
 	public EnumSet<Combinations> checkCombs(){
 		EnumSet<Combinations> availableCombs = EnumSet.allOf(Combinations.class);
 		

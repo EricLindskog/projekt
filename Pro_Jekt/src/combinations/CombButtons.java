@@ -112,13 +112,18 @@ public class CombButtons {
 		@Override
 		public void calculate(ArrayList<Die> list) {
 			int score = 0;
+			int count = 0;
 			for(int i=0; i<list.size();i++){
 				if(i<list.size()-1){
 					if(list.get(i).getValue()==list.get(i+1).getValue()){
 						score += list.get(i).getValue()*2;
 						i+=2;
+						count++;
 					}
 				}
+			}
+			if(count!=2){
+				score=0;
 			}
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);

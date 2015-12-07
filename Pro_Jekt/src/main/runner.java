@@ -25,6 +25,6 @@ public class runner {
 			}
 			else{s.nextLine();}
 		}while(cpu==-1);
-		game.run(players, cpu);
+		game.start(players, cpu);
 	}
 }

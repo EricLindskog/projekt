@@ -13,10 +13,9 @@ public class Die extends JButton implements Comparable<Die> {
 	private int value;
 	Random roll = new Random();
 	public void roll(){
-		
+		this.setVisible(true);
 		setValue(roll.nextInt(5)+1);
 		String path = "/assets/die"+this.getValue()+".png";
-		System.out.println(path);
 		try {
 			URL imageUrl = this.getClass().getResource(path);
 			this.setIcon(new javax.swing.ImageIcon(imageUrl));
@@ -30,11 +29,14 @@ public class Die extends JButton implements Comparable<Die> {
 	}
 
 	public void setValue(int value) {
+		if(value==0){
+			this.setVisible(false);
+		}
 		this.value = value;
 	}
 	
 	public int compareTo(Die arg0) {
 		
-		return Integer.compare(getValue(), arg0.getValue());
+		return Integer.compare(this.getValue(), arg0.getValue());
 	}
 }
