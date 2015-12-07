@@ -12,6 +12,8 @@ import javax.swing.JButton;
 public class Die extends JButton implements Comparable<Die> {
 	private int value;
 	Random roll = new Random();
+	//To roll or not to roll? That is the question...
+	private boolean toRoll = true;
 	public void roll(){
 		this.setVisible(true);
 		setValue(roll.nextInt(5)+1);
@@ -38,5 +40,13 @@ public class Die extends JButton implements Comparable<Die> {
 	public int compareTo(Die arg0) {
 		
 		return Integer.compare(this.getValue(), arg0.getValue());
+	}
+
+	public boolean isToRoll() {
+		return toRoll;
+	}
+
+	public void setToRoll(boolean toRoll) {
+		this.toRoll = toRoll;
 	}
 }
