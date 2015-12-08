@@ -31,11 +31,16 @@ public class Yatzy {
 	static final int MAX_ROUNDS = 15;
 	public int currentPart=0;
 	public int currentRolls=0;
+
+	int[]stats = new int[6];
 	ArrayList<Die>dice =new ArrayList<Die>();
 	ArrayList<Participant>parts = new ArrayList<Participant>();
 	ArrayList <CombButton>combs = new ArrayList<CombButton>();
 	
 	public void start(int players,int bots){
+		for (int i = 0; i < stats.length; i++) {
+			stats[i]=0;
+		}
 		for (int i = 0; i < players; i++) {
 			parts.add(new Player());
 		}
@@ -46,7 +51,6 @@ public class Yatzy {
 			dice.add(new Die());
 		}
 		create();
-		run();
 		
 	}
 	public void create(){
@@ -98,14 +102,16 @@ public class Yatzy {
 			for(int i =0; i<combs.size(); i++){
 				combs.get(i).addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
+						
 						Object source = e.getSource();
 				        if (source instanceof CombButton) {
 				            CombButton butt = (CombButton)source;
 				            if(butt.isClickable()){
-				            	calcPoints(butt.getPoints());
 				            	parts.get(currentPart).removeComb(butt.getComb());
+				            	calcPoints(butt.getPoints());
 				            }
 				        }
+				        updateScore(scorePanel);
 					}
 				});
 				combs.get(i).setLocation(50, 50*(i+1));
@@ -113,29 +119,24 @@ public class Yatzy {
 				combs.get(i).reset();
 				combinatinPanel.add(combs.get(i));
 			}
+
 			diePanel.add(rollDice);
 			rollDice.setText("ROLL ROLL ROLL");
 			rollDice.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent arg0) {
-					for (int i = 0; i < scorePanel.getComponentCount(); i++) {
-						if(scorePanel.getComponent(i) instanceof JButton){
-							JButton temp = (JButton)scorePanel.getComponent(i);
-							temp.setText("Player "+i+" score: "+parts.get(i).getScore());
-						}
-					}
+					printStats();
 					if(currentRolls<MAX_ROLLS_PER_ROUND){
 						for (int i = 0; i < dice.size(); i++) {
 							if(dice.get(i).isToRoll()){
 								dice.get(i).roll();
+								stats[dice.get(i).getValue()-1] +=1;
 								dice.get(i).setToRoll(false);
-							}
-							else{
-								System.out.println("WHY");
 							}
 						}
 						currentRolls++;
 						calculateCombs();
+						updateScore(scorePanel);
 					}
 					else{
 						 //Någon slags dialogruta som sägar att du inte får kasta igen
@@ -147,26 +148,33 @@ public class Yatzy {
 				diePanel.add(dice.get(i));
 				dice.get(i).addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
+						updateScore(scorePanel);
 						Object source = e.getSource();
 				        if (source instanceof JButton) {
 				            Die die = (Die)source;
-				            die.setToRoll(true);
-				            System.out.println("Rerolling dice: "+die.isToRoll());
+				            die.setToRoll(!die.isToRoll());
 				        }
 					}
 				});
 			}
 			resetCombs();
 	}
-	public void run(){
-		
+	public void updateScore(JPanel scorePanel){
+		for (int i = 0; i < scorePanel.getComponentCount(); i++) {
+			if(scorePanel.getComponent(i) instanceof JButton){
+				JButton temp = (JButton)scorePanel.getComponent(i);
+				temp.setText("Player "+i+" score: "+parts.get(i).getScore());
+			}
+		}
+	}
+	public void printStats(){
+		for (int i = 0; i < stats.length; i++) {
+			System.out.println("Number of "+(i+1)+":s : "+ stats[i]);
+		}
 	}
 	public void calculateCombs(){
 		Collections.sort(dice);
 		for(CombButton butt : combs){
-			EnumSet<Combinations>temp=EnumSet.complementOf(parts.get(currentPart).getCombs());
-			System.out.println(temp);
-			System.out.println(currentPart);
 			butt.setClickable(false);
 			if(parts.get(currentPart).getCombs().contains(butt.getComb())){
 				
@@ -193,6 +201,7 @@ public class Yatzy {
 	public void calcPoints(int points){
 		currentRolls=0;
 		parts.get(currentPart).addScore(points);
+		
 		currentPart++;
 		if(currentPart>=parts.size()){
 			currentPart=0;

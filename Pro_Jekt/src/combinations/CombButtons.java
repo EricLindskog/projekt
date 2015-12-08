@@ -117,7 +117,7 @@ public class CombButtons {
 				if(i<list.size()-1){
 					if(list.get(i).getValue()==list.get(i+1).getValue()){
 						score += list.get(i).getValue()*2;
-						i+=2;
+						i+=1;
 						count++;
 					}
 				}
@@ -208,10 +208,10 @@ public class CombButtons {
 		public void calculate(ArrayList<Die> list) {
 			boolean isHouse = false;
 			int score = 0;
-			if(list.get(0)==list.get(2)&&list.get(3)==list.get(4)){
+			if(list.get(0).getValue()==list.get(2).getValue()&&list.get(3).getValue()==list.get(4).getValue()){
 				isHouse=true;
 			}
-			if(list.get(0)==list.get(1)&&list.get(2)==list.get(4)){
+			if(list.get(0).getValue()==list.get(1).getValue()&&list.get(2).getValue()==list.get(4).getValue()){
 				isHouse=true;
 			}
 			if(isHouse){
@@ -240,7 +240,7 @@ public class CombButtons {
 		@Override
 		public void calculate(ArrayList<Die> list) {
 			int score=0;
-			if(list.get(0)==list.get(4)){
+			if(list.get(0).getValue()==list.get(4).getValue()){
 				score=50;
 			}
 			this.setPoints(score);
