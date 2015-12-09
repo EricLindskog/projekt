@@ -107,12 +107,9 @@ public class Yatzy {
 				        if (source instanceof CombButton) {
 				            CombButton butt = (CombButton)source;
 				            if(butt.isClickable()){
-				            	Combinations temp =butt.getComb();
-				            	temp.setValue(butt.getPoints());
-				            	parts.get(currentPart).getCombs().add(temp);
-				            	for(Combinations comb : parts.get(currentPart).getCombs()){
-				            		System.out.println(comb+" Värdet: "+comb.getValue());
-				            	}
+				            	parts.get(currentPart).setCombValue(butt.getComb(), butt.getPoints());
+				            	
+				            	System.out.println(parts.get(currentPart).getMap());
 				            	calcPoints(butt.getPoints());
 				            }
 				        }
@@ -193,7 +190,7 @@ public class Yatzy {
 		Collections.sort(dice);
 		for(CombButton butt : combs){
 			butt.setClickable(false);
-			if(parts.get(currentPart).getCombs().contains(butt.getComb())){
+			if(!(parts.get(currentPart).getKeySet().contains(butt.getComb()))){
 				
 				butt.calculate(dice);
 				if(butt.getPoints()>0){

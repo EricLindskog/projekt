@@ -16,7 +16,7 @@ public class runner {
 				players = s.nextInt();
 			}
 			else{s.nextLine();}
-		}while(players==-1);
+		}while(players<0||players>6);
 
 		do{
 			System.out.println("Skriv in antal datorer");
@@ -24,7 +24,7 @@ public class runner {
 				cpu = s.nextInt();
 			}
 			else{s.nextLine();}
-		}while(cpu==-1);
+		}while(cpu<0 || cpu>6);
 		
 		game.start(players, cpu);
 		
