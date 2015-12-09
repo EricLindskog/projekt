@@ -27,7 +27,7 @@ public class CombButtons {
 			int score = 0;
 			for(Die die : list){
 				if(die.getValue()==2){
-					score++;
+					score+=2;
 				}
 			}
 			this.setPoints(score);

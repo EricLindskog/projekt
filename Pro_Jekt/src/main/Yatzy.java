@@ -15,6 +15,7 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
@@ -54,7 +55,7 @@ public class Yatzy {
 		
 	}
 	public void create(){
-			JFrame frame = new JFrame();
+			final JFrame frame = new JFrame();
 			int JFrameX=700;
 			int JFrameY=500;
 			
@@ -73,7 +74,6 @@ public class Yatzy {
 			frame.setSize(FrameDim);
 			frame.setResizable(false);
 			frame.setLayout(new FlowLayout(FlowLayout.LEFT));
-			
 			diePanel.setLocation(0, 0);
 			diePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 			diePanel.setBackground(Color.CYAN);
@@ -107,7 +107,12 @@ public class Yatzy {
 				        if (source instanceof CombButton) {
 				            CombButton butt = (CombButton)source;
 				            if(butt.isClickable()){
-				            	parts.get(currentPart).removeComb(butt.getComb());
+				            	Combinations temp =butt.getComb();
+				            	temp.setValue(butt.getPoints());
+				            	parts.get(currentPart).getCombs().add(temp);
+				            	for(Combinations comb : parts.get(currentPart).getCombs()){
+				            		System.out.println(comb+" Värdet: "+comb.getValue());
+				            	}
 				            	calcPoints(butt.getPoints());
 				            }
 				        }
@@ -125,8 +130,14 @@ public class Yatzy {
 			rollDice.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent arg0) {
+					boolean canRoll=false;
 					printStats();
-					if(currentRolls<MAX_ROLLS_PER_ROUND){
+					for(Die die : dice){
+						if(die.isToRoll()){
+							canRoll=true;
+						}
+					}
+					if(currentRolls<MAX_ROLLS_PER_ROUND&&canRoll){
 						for (int i = 0; i < dice.size(); i++) {
 							if(dice.get(i).isToRoll()){
 								dice.get(i).roll();
@@ -138,9 +149,15 @@ public class Yatzy {
 						calculateCombs();
 						updateScore(scorePanel);
 					}
-					else{
+					
+					else if(canRoll){
 						 //Någon slags dialogruta som sägar att du inte får kasta igen
+						JOptionPane.showMessageDialog(frame, "You can't roll again",null, JOptionPane.YES_OPTION);
 					}
+					else{
+						JOptionPane.showMessageDialog(frame, "Select dice to roll",null, JOptionPane.YES_OPTION);
+					}
+					canRoll=true;
 				}
 			});
 			for (int i = 0; i < dice.size(); i++) {
