@@ -29,7 +29,7 @@ import participant.Player;
 
 public class Yatzy {
 	static final int MAX_ROLLS_PER_ROUND = 3;
-	static final int MAX_ROUNDS = 15;
+	static int MAX_TURNS=0;
 	public int currentPart=0;
 	public int currentRolls=0;
 
@@ -51,6 +51,7 @@ public class Yatzy {
 		for (int i = 0; i < 5; i++) {
 			dice.add(new Die());
 		}
+		MAX_TURNS = (players+bots)*15;
 		create();
 		
 	}
@@ -65,8 +66,6 @@ public class Yatzy {
 			Dimension P1P2Dim = new Dimension(350,500);
 			Dimension FrameDim = new Dimension(800,500);
 			Dimension p2 =new Dimension(150,500);
-			
-			combs = CombButtons.getButtons();
 			
 			AbstractButton rollDice = new JButton();
 			frame.setUndecorated(true);
@@ -84,10 +83,6 @@ public class Yatzy {
 			scorePanel.setBackground(Color.MAGENTA);
 			scorePanel.setPreferredSize(p2);
 			
-			for(Participant part: parts){
-				String temp = Integer.toString(part.getScore());
-				scorePanel.add(new JButton(temp));
-			}
 			combinatinPanel.setLocation(350, 0);
 			combinatinPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 			combinatinPanel.setBackground(Color.MAGENTA);
@@ -99,6 +94,13 @@ public class Yatzy {
 			frame.add(diePanel);
 			frame.add(combinatinPanel);
 			frame.add(scorePanel);
+			
+			for(Participant part: parts){
+				String temp = Integer.toString(part.getScore());
+				scorePanel.add(new JButton(temp));
+			}
+			
+			combs = CombButtons.getButtons();
 			for(int i =0; i<combs.size(); i++){
 				combs.get(i).addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
@@ -188,6 +190,7 @@ public class Yatzy {
 	}
 	public void calculateCombs(){
 		Collections.sort(dice);
+		int count=0;
 		for(CombButton butt : combs){
 			butt.setClickable(false);
 			if(!(parts.get(currentPart).getKeySet().contains(butt.getComb()))){
@@ -196,8 +199,17 @@ public class Yatzy {
 				if(butt.getPoints()>0){
 					butt.setClickable(true);
 				}
+				else{
+					count++;
+				}
 			}
-			else{butt.reset();}
+			else{
+				butt.reset();
+				count++;
+			}
+			
+		}
+		if(count>=combs.size()){
 			
 		}
 	}
@@ -215,7 +227,7 @@ public class Yatzy {
 	public void calcPoints(int points){
 		currentRolls=0;
 		parts.get(currentPart).addScore(points);
-		
+		MAX_TURNS--;
 		currentPart++;
 		if(currentPart>=parts.size()){
 			currentPart=0;

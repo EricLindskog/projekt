@@ -15,6 +15,8 @@ public class CombButtons {
 					score++;
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
+			
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -30,6 +32,7 @@ public class CombButtons {
 					score+=2;
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -44,6 +47,7 @@ public class CombButtons {
 					score+=3;
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -58,6 +62,7 @@ public class CombButtons {
 					score+=4;
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -72,6 +77,7 @@ public class CombButtons {
 					score+=5;
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -86,6 +92,7 @@ public class CombButtons {
 					score+=6;
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -102,6 +109,7 @@ public class CombButtons {
 					}
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 
@@ -125,6 +133,7 @@ public class CombButtons {
 			if(count!=2){
 				score=0;
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -141,6 +150,7 @@ public class CombButtons {
 					}
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -157,6 +167,7 @@ public class CombButtons {
 					}
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 			
@@ -178,6 +189,7 @@ public class CombButtons {
 					score+=list.get(i).getValue();
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -198,6 +210,7 @@ public class CombButtons {
 					score+=list.get(i).getValue();
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -219,6 +232,7 @@ public class CombButtons {
 					score+=list.get(i).getValue();
 				}
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -231,6 +245,7 @@ public class CombButtons {
 			for (int i = 0; i <list.size(); i++) {
 				score+=list.get(i).getValue();
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}
@@ -243,6 +258,7 @@ public class CombButtons {
 			if(list.get(0).getValue()==list.get(4).getValue()){
 				score=50;
 			}
+			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 		}

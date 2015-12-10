@@ -16,7 +16,7 @@ public class Die extends JButton implements Comparable<Die> {
 	private boolean toRoll = true;
 	public void roll(){
 		this.setVisible(true);
-		setValue(roll.nextInt(5)+1);
+		setValue(roll.nextInt(6)+1);
 		
 	}
 	

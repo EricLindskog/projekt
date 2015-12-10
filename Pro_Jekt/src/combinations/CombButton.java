@@ -12,6 +12,7 @@ import die.Die;
  *	Instance it as an anonymous class
  */
 public abstract class CombButton extends JButton{
+	private int occurences=0;
 	private boolean clickable = false;
 	private Combinations Comb;
 	private int points;
@@ -47,5 +48,11 @@ public abstract class CombButton extends JButton{
 	}
 	public void setClickable(boolean clickable) {
 		this.clickable = clickable;
+	}
+	public int getOccurences() {
+		return occurences;
+	}
+	public void setOccurences(int occurences) {
+		this.occurences = occurences;
 	}
 }
