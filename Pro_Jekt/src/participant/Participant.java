@@ -34,5 +34,8 @@ public abstract class Participant {
 	public Set<Combinations> getKeySet(){
 		return map.keySet();
 	}
+	public int getCombPoints(Combinations key){
+		return map.get(key);
+	}
 
 }

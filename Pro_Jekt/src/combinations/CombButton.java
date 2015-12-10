@@ -47,6 +47,9 @@ public abstract class CombButton extends JButton{
 		return clickable;
 	}
 	public void setClickable(boolean clickable) {
+		if(clickable){
+			occurences++;
+		}
 		this.clickable = clickable;
 	}
 	public int getOccurences() {

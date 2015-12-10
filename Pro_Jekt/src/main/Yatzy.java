@@ -17,6 +17,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.border.Border;
 
 import combinations.CombButton;
@@ -57,14 +59,15 @@ public class Yatzy {
 	}
 	public void create(){
 			final JFrame frame = new JFrame();
-			int JFrameX=700;
+			int JFrameX=820;
 			int JFrameY=500;
 			
 			JPanel diePanel = new JPanel();
 			JPanel combinatinPanel = new JPanel();
 			final JPanel scorePanel = new JPanel();
+			final JPanel detailPanel = new JPanel();
 			Dimension P1P2Dim = new Dimension(350,500);
-			Dimension FrameDim = new Dimension(800,500);
+			Dimension FrameDim = new Dimension(JFrameX,JFrameY);
 			Dimension p2 =new Dimension(150,500);
 			
 			AbstractButton rollDice = new JButton();
@@ -83,6 +86,11 @@ public class Yatzy {
 			scorePanel.setBackground(Color.MAGENTA);
 			scorePanel.setPreferredSize(p2);
 			
+			detailPanel.setLocation(350, 0);
+			detailPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+			detailPanel.setBackground(Color.PINK);
+			detailPanel.setPreferredSize(p2);
+			
 			combinatinPanel.setLocation(350, 0);
 			combinatinPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 			combinatinPanel.setBackground(Color.MAGENTA);
@@ -94,10 +102,17 @@ public class Yatzy {
 			frame.add(diePanel);
 			frame.add(combinatinPanel);
 			frame.add(scorePanel);
+			frame.add(detailPanel);
+			final JTextPane scoreDetail = new JTextPane();
+			scoreDetail.setPreferredSize(p2);
+			scoreDetail.setEditable(false);
+			detailPanel.add(scoreDetail);
 			
-			for(Participant part: parts){
-				String temp = Integer.toString(part.getScore());
-				scorePanel.add(new JButton(temp));
+			for(int i =0;i<parts.size();i++){
+				String temp = "Player "+(i+1)+" : "+parts.get(i).getScore();
+				JButton score = new JButton(temp);
+				scorePanel.add(score);
+				
 			}
 			
 			combs = CombButtons.getButtons();
@@ -116,6 +131,7 @@ public class Yatzy {
 				            }
 				        }
 				        updateScore(scorePanel);
+				        scoreDetail.setText(updateDetails());
 					}
 				});
 				combs.get(i).setLocation(50, 50*(i+1));
@@ -129,6 +145,7 @@ public class Yatzy {
 			rollDice.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent arg0) {
+					scoreDetail.setText(updateDetails());
 					boolean canRoll=false;
 					printStats();
 					for(Die die : dice){
@@ -179,7 +196,7 @@ public class Yatzy {
 		for (int i = 0; i < scorePanel.getComponentCount(); i++) {
 			if(scorePanel.getComponent(i) instanceof JButton){
 				JButton temp = (JButton)scorePanel.getComponent(i);
-				temp.setText("Player "+i+" score: "+parts.get(i).getScore());
+				temp.setText("Player "+(i+1)+" score: "+parts.get(i).getScore());
 			}
 		}
 	}
@@ -199,18 +216,24 @@ public class Yatzy {
 				if(butt.getPoints()>0){
 					butt.setClickable(true);
 				}
-				else{
-					count++;
-				}
+				else count++;
+				
 			}
 			else{
 				butt.reset();
 				count++;
 			}
-			
 		}
-		if(count>=combs.size()){
-			
+		if(count>=combs.size()&&currentRolls>=3){
+			JOptionPane.showMessageDialog(null, "Out of combination, "
+					+ "select one of your remaining to discard"
+					,null, JOptionPane.YES_OPTION);
+			for(CombButton butt : combs){
+				butt.setClickable(false);
+				if(!(parts.get(currentPart).getKeySet().contains(butt.getComb()))){
+					butt.setClickable(true);
+				}
+			}
 		}
 	}
 	public void resetCombs(){
@@ -228,6 +251,7 @@ public class Yatzy {
 		currentRolls=0;
 		parts.get(currentPart).addScore(points);
 		MAX_TURNS--;
+		calcBonus();
 		currentPart++;
 		if(currentPart>=parts.size()){
 			currentPart=0;
@@ -236,5 +260,33 @@ public class Yatzy {
 		System.out.println("Har poäng: "+parts.get(currentPart).getScore());
 		resetCombs();
 		resetDice();
+	}
+	public void calcBonus(){
+		EnumSet <Combinations>bonus = EnumSet.of(
+				Combinations.aces,
+				Combinations.twos,
+				Combinations.threes,
+				Combinations.fours,
+				Combinations.fives,
+				Combinations.sixes);
+		if(parts.get(currentPart).getKeySet().containsAll(bonus)){
+			int points=0;
+			for (Combinations key : bonus) {
+				points+=parts.get(currentPart).getCombPoints(key);
+				
+			}
+			if(points>=63){
+				parts.get(currentPart).addScore(50);
+				parts.get(currentPart).setCombValue(Combinations.bonus, 50);
+			}
+		}
+	}
+	public String updateDetails(){
+		String temp="";
+		temp+="Spelare"+(currentPart+1)+":s poäng och bonusar\n";
+		for (Combinations comb : parts.get(currentPart).getKeySet()){
+			temp+=comb.toString()+" : "+parts.get(currentPart).getCombPoints(comb)+"\n";
+		}
+		return temp;
 	}
 }
