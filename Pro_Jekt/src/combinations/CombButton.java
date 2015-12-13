@@ -20,6 +20,10 @@ public abstract class CombButton extends JButton{
 		this.setComb(Comb);
 		this.setVisible(true);
 	}
+	/**
+	 * Resets the text on the button to say: n/a.
+	 * Used for when the combination is unavailable to you.
+	 */
 	public void reset(){
 		this.setText(getComb().toString()+ " :n/a");
 	}
@@ -31,6 +35,9 @@ public abstract class CombButton extends JButton{
 	 * @param list the list of dice you want to calculate a combination for.
 	 */
 	public abstract void calculate(ArrayList <Die> list);
+	
+	
+	//Getters and setters
 	public int getPoints() {
 		return points;
 	}
@@ -47,9 +54,6 @@ public abstract class CombButton extends JButton{
 		return clickable;
 	}
 	public void setClickable(boolean clickable) {
-		if(clickable){
-			occurences++;
-		}
 		this.clickable = clickable;
 	}
 	public int getOccurences() {

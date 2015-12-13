@@ -3,7 +3,11 @@ package combinations;
 import java.util.ArrayList;
 
 import die.Die;
-
+/**
+ * Creates instances of combButtons for the needed combinations.
+ * @author eric
+ *
+ */
 public class CombButtons {
 	static ArrayList <CombButton> list = new ArrayList<CombButton>();
 	static CombButton aces = new CombButton(Combinations.aces){
@@ -106,10 +110,10 @@ public class CombButtons {
 				if(i<list.size()-1){
 					if(list.get(i).getValue()==list.get(i+1).getValue()){
 						score = list.get(i).getValue()*2;
+						if(score>0)this.setOccurences(this.getOccurences()+1);
 					}
 				}
 			}
-			if(score>0)this.setOccurences(this.getOccurences()+1);
 			this.setPoints(score);
 			this.setText(this.getComb().toString()+" : "+score);
 
@@ -263,6 +267,10 @@ public class CombButtons {
 			this.setText(this.getComb().toString()+" : "+score);
 		}
 	};
+	/**
+	 * Adds all the combination buttons to an array and returns it for ease of use
+	 * @return Returns an array with all the combination buttons
+	 */
 	public static ArrayList<CombButton> getButtons(){
 		list.add(aces);
 		list.add(twos);

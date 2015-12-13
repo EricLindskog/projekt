@@ -1,7 +1,11 @@
 package participant;
 
 import die.Die;
-
+/**
+ * A computer controlled participant.
+ * @author eric
+ *
+ */
 public class Bot extends Participant {
 
 	@Override

@@ -7,6 +7,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -251,6 +257,7 @@ public class Yatzy {
 		currentRolls=0;
 		parts.get(currentPart).addScore(points);
 		MAX_TURNS--;
+		saveCombOdds();
 		calcBonus();
 		currentPart++;
 		if(currentPart>=parts.size()){
@@ -283,10 +290,30 @@ public class Yatzy {
 	}
 	public String updateDetails(){
 		String temp="";
+		int bonus = 0;
 		temp+="Spelare"+(currentPart+1)+":s poäng och bonusar\n";
 		for (Combinations comb : parts.get(currentPart).getKeySet()){
 			temp+=comb.toString()+" : "+parts.get(currentPart).getCombPoints(comb)+"\n";
+			bonus +=parts.get(currentPart).getCombPoints(comb);
 		}
+		temp+="Kvar till bonus: "+(63-bonus);
 		return temp;
+	}
+	public void saveCombOdds(){
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter("odds.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+			System.out.println("sdadad");
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(CombButton butt : combs){
+			writer.println(butt.getComb()+" : "+butt.getOccurences());
+		}
+		writer.close();
 	}
 }
