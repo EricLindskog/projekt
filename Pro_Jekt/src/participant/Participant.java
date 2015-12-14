@@ -31,8 +31,6 @@ public abstract class Participant {
 	public void setCombValue(Combinations key,int value){
 		map.put(key, value);
 	}
-	public abstract Die[] dicesToReroll(Die[] dice);
-
 	public HashMap <Combinations,Integer> getMap() {
 		return map;
 	}
