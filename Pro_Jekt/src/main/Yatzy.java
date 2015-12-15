@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Iterator;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -38,10 +39,12 @@ public class Yatzy {
 	public int currentPart=0;
 	public int currentRolls=0;
 
+	AbstractButton rollDice = new JButton();
 	int[]stats = new int[6];
 	ArrayList<Die>dice =new ArrayList<Die>();
 	ArrayList<Participant>parts = new ArrayList<Participant>();
 	ArrayList <CombButton>combs = new ArrayList<CombButton>();
+	
 	
 	public void start(int players,int bots){
 		for (int i = 0; i < stats.length; i++) {
@@ -74,7 +77,7 @@ public class Yatzy {
 			Dimension FrameDim = new Dimension(JFrameX,JFrameY);
 			Dimension p2 =new Dimension(150,500);
 			
-			AbstractButton rollDice = new JButton();
+			
 			frame.setUndecorated(true);
 			frame.setVisible(true);
 			frame.setSize(FrameDim);
@@ -227,17 +230,61 @@ public class Yatzy {
 				count++;
 			}
 		}
+		
 		if(parts.get(currentPart) instanceof Bot){
-			((Bot)(parts.get(currentPart))).bottPlaying(combs);
-		}
+			
+			
+			ArrayList<CombButton> buttontemp = new ArrayList<CombButton>();
+			for (int i = 0; i < combs.size(); i++) {
+				if(combs.get(i).isClickable() && !(parts.get(currentPart).getKeySet().contains(combs.get(i)))){
+					buttontemp.add(combs.get(i));
+				}
+			}
+			boolean clickComb = false;
+			while(currentRolls<MAX_ROLLS_PER_ROUND && clickComb==false){
+				
+			
+			 Combinations combtemp = ((Bot)(parts.get(currentPart))).bottPlaying(buttontemp);
+			 
+			if(combtemp==null){
+				for (Die die : dice) {
+					die.roll();
+					currentRolls++;
+				}
+				
+			}
+			
+				else{
+					for (int i = 0; i < combs.size(); i++) {
+						if(combs.get(i).getComb().equals(combtemp)){
+							combs.get(i).doClick();
+							clickComb=true;
+							
+						}
+							
+					}
+				}
+			}
+			}
+		
 		if(count>=combs.size()&&currentRolls>=3){
-			JOptionPane.showMessageDialog(null, "Out of combination, "
+			if(!(parts.get(currentPart) instanceof Bot)){
+				JOptionPane.showMessageDialog(null, "Out of combination, "
 					+ "select one of your remaining to discard"
 					,null, JOptionPane.YES_OPTION);
+			}
 			for(CombButton butt : combs){
 				butt.setClickable(false);
 				if(!(parts.get(currentPart).getKeySet().contains(butt.getComb()))){
 					butt.setClickable(true);
+				}
+			}
+			boolean doclick=false;
+			if(doclick==false)
+			for (int i = 0; i < combs.size(); i++) {
+				if(combs.get(i).getComb().equals(((Bot)(parts.get(currentPart))).Discard())){
+					combs.get(i).doClick();
+					doclick=true;
 				}
 			}
 		}
@@ -246,6 +293,7 @@ public class Yatzy {
 		for(CombButton butt : combs){
 			butt.reset();
 		}
+		rollDice.doClick();
 	}
 	public void resetDice(){
 		for(Die die : dice){
@@ -266,8 +314,9 @@ public class Yatzy {
 		}
 		System.out.println("Spelare: "+(currentPart+1)+" tur");
 		System.out.println("Har poäng: "+parts.get(currentPart).getScore());
-		resetCombs();
+		
 		resetDice();
+		resetCombs();
 	}
 	public void end(){
 		if(MAX_TURNS == 0){
