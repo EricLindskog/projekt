@@ -216,14 +216,14 @@ public class Yatzy {
 		int count=0;
 		for(CombButton butt : combs){
 			butt.setClickable(false);
+			butt.calculate(dice);
 			if(!(parts.get(currentPart).getKeySet().contains(butt.getComb()))){
 				
-				butt.calculate(dice);
+				
 				if(butt.getPoints()>0){
 					butt.setClickable(true);
 				}
 				else count++;
-				
 			}
 			else{
 				butt.reset();
