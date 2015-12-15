@@ -7,12 +7,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -60,6 +57,7 @@ public class Yatzy {
 			dice.add(new Die());
 		}
 		MAX_TURNS = (players+bots)*15;
+		MAX_TURNS = 2;
 		create();
 		
 	}
@@ -219,7 +217,6 @@ public class Yatzy {
 			butt.calculate(dice);
 			if(!(parts.get(currentPart).getKeySet().contains(butt.getComb()))){
 				
-				
 				if(butt.getPoints()>0){
 					butt.setClickable(true);
 				}
@@ -229,6 +226,9 @@ public class Yatzy {
 				butt.reset();
 				count++;
 			}
+		}
+		if(parts.get(currentPart) instanceof Bot){
+			((Bot)(parts.get(currentPart))).bottPlaying(combs);
 		}
 		if(count>=combs.size()&&currentRolls>=3){
 			JOptionPane.showMessageDialog(null, "Out of combination, "
@@ -259,6 +259,7 @@ public class Yatzy {
 		MAX_TURNS--;
 		saveCombOdds();
 		calcBonus();
+		end();
 		currentPart++;
 		if(currentPart>=parts.size()){
 			currentPart=0;
@@ -267,6 +268,11 @@ public class Yatzy {
 		System.out.println("Har poäng: "+parts.get(currentPart).getScore());
 		resetCombs();
 		resetDice();
+	}
+	public void end(){
+		if(MAX_TURNS == 0){
+			
+		}
 	}
 	public void calcBonus(){
 		EnumSet <Combinations>bonus = EnumSet.of(

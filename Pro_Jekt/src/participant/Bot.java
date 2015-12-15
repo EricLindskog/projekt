@@ -14,14 +14,18 @@ public class Bot extends Participant {
 
 	private Die[] list;
 
-	public void bottPlaying(ArrayList<Die> list, ArrayList<CombButton> buttons){
+	public Combinations bottPlaying(ArrayList<CombButton> buttons){
 		for (int i = 0; i < buttons.size(); i++) {
 			if(Combinations.yatzy==buttons.get(i).getComb()){
-				if(buttons.get(i).calculate(list));
+				if(buttons.get(i).isClickable()){
+					return Combinations.yatzy;
+				}
+					
+				
 			}
 		}
 		
-		reRollingDices(list);
+		return null;
 	}
 	
 	
