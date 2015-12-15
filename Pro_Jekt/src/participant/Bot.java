@@ -21,7 +21,7 @@ public class Bot extends Participant {
 			return Combinations.yatzy;
 		}
 		if(houseTrue(list) && !(this.getKeySet().contains(Combinations.yatzy))){
-			return Combinations.yatzy;
+			return Combinations.house;
 		}
 			
 		
