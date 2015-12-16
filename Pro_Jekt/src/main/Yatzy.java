@@ -7,7 +7,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -60,14 +63,14 @@ public class Yatzy {
 			dice.add(new Die());
 		}
 		MAX_TURNS = (players+bots)*15;
-		MAX_TURNS = 2;
+		MAX_TURNS =2;
 		create();
 		
 	}
 	public void create(){
 			final JFrame frame = new JFrame();
 			int JFrameX=820;
-			int JFrameY=500;
+			int JFrameY=520;
 			
 			JPanel diePanel = new JPanel();
 			JPanel combinatinPanel = new JPanel();
@@ -77,8 +80,7 @@ public class Yatzy {
 			Dimension FrameDim = new Dimension(JFrameX,JFrameY);
 			Dimension p2 =new Dimension(150,500);
 			
-			
-			frame.setUndecorated(true);
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			frame.setVisible(true);
 			frame.setSize(FrameDim);
 			frame.setResizable(false);
@@ -171,10 +173,10 @@ public class Yatzy {
 						currentRolls++;
 						calculateCombs();
 						updateScore(scorePanel);
+						saveHighscore();
 					}
 					
 					else if(canRoll){
-						 //Någon slags dialogruta som sägar att du inte får kasta igen
 						JOptionPane.showMessageDialog(frame, "You can't roll again",null, JOptionPane.YES_OPTION);
 					}
 					else{
@@ -368,6 +370,36 @@ public class Yatzy {
 		
 		for(CombButton butt : combs){
 			writer.println(butt.getComb()+" : "+butt.getOccurences());
+		}
+		writer.close();
+	}
+	public void saveHighscore(){
+		int tempScore = 0;
+		for(Participant p : parts){
+			if(p instanceof Player){
+				if(p.getScore()>tempScore){
+					tempScore = p.getScore();
+				}
+			}
+		}
+		String input = JOptionPane.showInputDialog("Skriv in namn för nytt highscore");
+		String newScore = input+" "+tempScore+":";
+		String[] list = runner.getHighscoreArr();
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter("highscore.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+			System.out.println("sdadad");
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		writer.print(newScore);
+		for (int i = 0; i < list.length; i++) {
+			if(list[i].length()>0){
+				writer.print(list[i]+":");
+			}
 		}
 		writer.close();
 	}

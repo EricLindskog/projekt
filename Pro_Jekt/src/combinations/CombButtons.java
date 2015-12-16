@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import die.Die;
 /**
  * Creates instances of combButtons for the needed combinations.
+ * Each just holds the calculation for the given combination, and the number of occurences.
  * @author eric
  *
  */
