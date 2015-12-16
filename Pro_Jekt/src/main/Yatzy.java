@@ -15,8 +15,12 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -384,7 +388,15 @@ public class Yatzy {
 		}
 		String input = JOptionPane.showInputDialog("Skriv in namn för nytt highscore");
 		String newScore = input+" "+tempScore+":";
-		String[] list = runner.getHighscoreArr();
+		String[] templist = runner.getHighscoreArr();
+		String[] list = new String[templist.length+1];
+		list[0] = newScore;
+		for (int i = 0; i < templist.length; i++) {
+			list[i+1] = templist[i];
+		}
+		
+		list = sortHighscore(list);
+		
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter("highscore.txt", "UTF-8");
@@ -395,12 +407,53 @@ public class Yatzy {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		writer.print(newScore);
 		for (int i = 0; i < list.length; i++) {
 			if(list[i].length()>0){
 				writer.print(list[i]+":");
 			}
 		}
 		writer.close();
+	}
+	public String[] sortHighscore(String[] list){
+		HashMap<Integer, ArrayList<String>> unsortMap = new HashMap<Integer, ArrayList<String>>();
+		for (int i = 0; i < list.length; i++) {
+			String[] temp = list[i].split(" ");
+			temp[0]=temp[0].replaceAll(":", "");
+			temp[1]=temp[1].replaceAll(":", "");
+			int key = Integer.parseInt(temp[1]);
+			if(unsortMap.containsKey(key)){
+				unsortMap.get(key).add(temp[0]);
+			}else{
+				ArrayList<String>values = new ArrayList<String>();
+				values.add(temp[0]);
+				unsortMap.put(key,values);
+			}
+			
+		}
+		Map<Integer, ArrayList <String>> treeMap = new TreeMap<Integer, ArrayList <String>>(
+				new Comparator<Integer>() {
+
+				public int compare(Integer o1, Integer o2) {
+					return o2.compareTo(o1);
+				}
+
+		});
+		treeMap.putAll(unsortMap);
+		for (int key : treeMap.keySet()) {
+			for(String value : treeMap.get(key)){
+				System.out.println(key+" "+value);
+			}
+		}
+		System.out.println("map");
+		int i = 0;
+		for(int key : treeMap.keySet()){
+			for(String value : treeMap.get(key)){
+				list[i] = value+" "+key;
+				System.out.println(list[i]);
+				i++;
+			}
+		}
+		System.out.println("tjena");
+		return list;
 	}
 }
