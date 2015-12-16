@@ -45,7 +45,7 @@ public class runner {
 		Dimension spinDim = new Dimension(50,50);
 		Dimension panelsDim = new Dimension(250,JFrameY-50);
 
-		SpinnerModel playerModel = new SpinnerNumberModel(1,0,5,1);
+		SpinnerModel playerModel = new SpinnerNumberModel(0,0,5,1);
 	    final JSpinner numPlayers = new JSpinner(playerModel);
 	    SpinnerModel botModel = new SpinnerNumberModel(0, 0, 5, 1);
 	    final JSpinner numBots = new JSpinner(botModel);
@@ -127,7 +127,7 @@ public class runner {
 				int tempB = (Integer)numBots.getValue();
 				int tempP = (Integer)numPlayers.getValue();
 				
-				if(tempP>0 && tempB>=0){
+				if(tempP+tempB>0){
 
 					Yatzy game = new Yatzy();
 					game.start(tempP,tempB);

@@ -1,9 +1,9 @@
-aces : 1
-twos : 1
-threes : 2
-fours : 0
+aces : 2
+twos : 0
+threes : 3
+fours : 3
 fives : 2
-sixes : 2
+sixes : 3
 onepair : 2
 twopair : 0
 threeofakind : 0
@@ -11,5 +11,5 @@ fourofakind : 0
 smallstraight : 0
 bigstraight : 0
 house : 0
-chance : 2
+chance : 3
 yatzy : 0
