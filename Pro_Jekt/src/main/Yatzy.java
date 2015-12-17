@@ -1,10 +1,10 @@
 package main;
 
-import java.awt.Button;
+
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -51,6 +51,7 @@ public class Yatzy {
 	ArrayList<Die>dice =new ArrayList<Die>();
 	ArrayList<Participant>parts = new ArrayList<Participant>();
 	ArrayList <CombButton>combs = new ArrayList<CombButton>();
+	final JFrame frame = new JFrame();
 	
 	
 	public void start(int players,int bots){
@@ -67,13 +68,12 @@ public class Yatzy {
 			dice.add(new Die());
 		}
 		MAX_TURNS = (players+bots)*15;
-		MAX_TURNS =2;
 		create();
 		
 	}
 	public void create(){
-			final JFrame frame = new JFrame();
-			int JFrameX=820;
+			
+			int JFrameX=830;
 			int JFrameY=520;
 			
 			JPanel diePanel = new JPanel();
@@ -237,40 +237,8 @@ public class Yatzy {
 		}
 		
 		if(parts.get(currentPart) instanceof Bot){
-			
-			
-			ArrayList<CombButton> buttontemp = new ArrayList<CombButton>();
-			for (int i = 0; i < combs.size(); i++) {
-				if(combs.get(i).isClickable() && !(parts.get(currentPart).getKeySet().contains(combs.get(i)))){
-					buttontemp.add(combs.get(i));
-				}
-			}
-			boolean clickComb = false;
-			while(currentRolls<MAX_ROLLS_PER_ROUND && clickComb==false){
-				
-			
-			 Combinations combtemp = ((Bot)(parts.get(currentPart))).bottPlaying(buttontemp);
-			 
-			if(combtemp==null){
-				for (Die die : dice) {
-					die.roll();
-					currentRolls++;
-				}
-				
-			}
-			
-				else{
-					for (int i = 0; i < combs.size(); i++) {
-						if(combs.get(i).getComb().equals(combtemp)){
-							combs.get(i).doClick();
-							clickComb=true;
-							
-						}
-							
-					}
-				}
-			}
-			}
+			botTurn();
+		}
 		
 		if(count>=combs.size()&&currentRolls>=3){
 			if(!(parts.get(currentPart) instanceof Bot)){
@@ -290,6 +258,35 @@ public class Yatzy {
 				if(combs.get(i).getComb().equals(((Bot)(parts.get(currentPart))).Discard())){
 					combs.get(i).doClick();
 					doclick=true;
+				}
+			}
+		}
+	}
+	public void botTurn(){
+		ArrayList<CombButton> buttontemp = new ArrayList<CombButton>();
+		for (int i = 0; i < combs.size(); i++) {
+			if(combs.get(i).isClickable() && !(parts.get(currentPart).getKeySet().contains(combs.get(i)))){
+				buttontemp.add(combs.get(i));
+			}
+		}
+		boolean clickComb = false;
+		while(currentRolls<MAX_ROLLS_PER_ROUND && clickComb==false){
+			
+		
+		 Combinations combtemp = ((Bot)(parts.get(currentPart))).bottPlaying(buttontemp);
+		 
+			if(combtemp==null){
+				for (Die die : dice) {
+					die.roll();
+					currentRolls++;
+				}	
+			}
+			else{
+				for (int i = 0; i < combs.size(); i++) {
+					if(combs.get(i).getComb().equals(combtemp)){
+						combs.get(i).doClick();
+						clickComb=true;	
+					}			
 				}
 			}
 		}
@@ -324,9 +321,21 @@ public class Yatzy {
 		resetCombs();
 	}
 	public void end(){
-		if(MAX_TURNS == 0){
-			
-		}
+		if(MAX_TURNS <= 0){
+			System.out.println("kapa");
+				int reply = JOptionPane.showConfirmDialog(null, "would you like to starta new game", "New game", JOptionPane.YES_NO_OPTION);
+		        if (reply == JOptionPane.YES_OPTION) {
+		          runner jeng = new runner();
+		          jeng.main(null);
+		          frame.dispose();
+		          
+		        }
+		        else {
+		           //JOptionPane.showMessageDialog(null, "GOODBYE");
+		           System.exit(0);
+		        }
+		       
+		    }
 	}
 	public void calcBonus(){
 		EnumSet <Combinations>bonus = EnumSet.of(
