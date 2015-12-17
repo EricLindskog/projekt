@@ -1,1 +1,1 @@
-null 12:null 12:null 12:rumpa 8:bajs 5:snopp 2:null 0:null 0:null 0:snoppar 0:sol 0:skit 0:
+null 22:null 22:null 12:null 12:null 12:rumpa 8:bajs 5:snopp 2:null 0:null 0:null 0:null 0:null 0:snoppar 0:sol 0:skit 0:

@@ -177,7 +177,6 @@ public class Yatzy {
 						currentRolls++;
 						calculateCombs();
 						updateScore(scorePanel);
-						saveHighscore();
 					}
 					
 					else if(canRoll){
@@ -407,6 +406,7 @@ public class Yatzy {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		for (int i = 0; i < list.length; i++) {
 			if(list[i].length()>0){
 				writer.print(list[i]+":");
