@@ -46,7 +46,7 @@ public class runner {
 		Dimension spinDim = new Dimension(50,50);
 		Dimension panelsDim = new Dimension(250,JFrameY-50);
 
-		SpinnerModel playerModel = new SpinnerNumberModel(0,0,5,1);
+		SpinnerModel playerModel = new SpinnerNumberModel(1,1,5,1);
 	    final JSpinner numPlayers = new JSpinner(playerModel);
 	    SpinnerModel botModel = new SpinnerNumberModel(0, 0, 5, 1);
 	    final JSpinner numBots = new JSpinner(botModel);

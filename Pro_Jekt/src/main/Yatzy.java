@@ -39,7 +39,11 @@ import die.Die;
 import participant.Bot;
 import participant.Participant;
 import participant.Player;
-
+/**
+ * 
+ * @author Zydoc
+ * Runs a game of yahhahahahahatzyeah
+ */
 public class Yatzy {
 	static final int MAX_ROLLS_PER_ROUND = 3;
 	static int MAX_TURNS=0;
@@ -53,7 +57,11 @@ public class Yatzy {
 	ArrayList <CombButton>combs = new ArrayList<CombButton>();
 	final JFrame frame = new JFrame();
 	
-	
+	/**
+	 * Initiates the game of yahtzeee
+	 * @param players number of players wanted
+	 * @param bots number of bots wanted
+	 */
 	public void start(int players,int bots){
 		for (int i = 0; i < stats.length; i++) {
 			stats[i]=0;
@@ -71,6 +79,9 @@ public class Yatzy {
 		create();
 		
 	}
+	/**
+	 * Creates all the gui and runs the game
+	 */
 	public void create(){
 			
 			int JFrameX=830;
@@ -204,6 +215,10 @@ public class Yatzy {
 			}
 			resetCombs();
 	}
+	/**
+	 * Updates the participants scorepanel with the current score
+	 * @param scorePanel the scorepanel that you want to update
+	 */
 	public void updateScore(JPanel scorePanel){
 		for (int i = 0; i < scorePanel.getComponentCount(); i++) {
 			if(scorePanel.getComponent(i) instanceof JButton){
@@ -212,11 +227,19 @@ public class Yatzy {
 			}
 		}
 	}
+	/**
+	 * Prints out the number of occurrences of the dice
+	 */
 	public void printStats(){
 		for (int i = 0; i < stats.length; i++) {
 			System.out.println("Number of "+(i+1)+":s : "+ stats[i]);
 		}
 	}
+	/**
+	 * calculates the points for all the current combinations
+	 * based on the current values of the dice. Also checks which ones the current
+	 * player can press, and if it can't press any it asks you to discard one.
+	 */
 	public void calculateCombs(){
 		Collections.sort(dice);
 		int count=0;
@@ -255,13 +278,19 @@ public class Yatzy {
 			boolean doclick=false;
 			if(doclick==false)
 			for (int i = 0; i < combs.size(); i++) {
-				if(combs.get(i).getComb().equals(((Bot)(parts.get(currentPart))).Discard())){
-					combs.get(i).doClick();
-					doclick=true;
+				if(parts.get(currentPart) instanceof Bot){
+					
+					if(combs.get(i).getComb().equals(((Bot)(parts.get(currentPart))).Discard())){
+						combs.get(i).doClick();
+						doclick=true;
+					}
 				}
 			}
 		}
 	}
+	/**
+	 * Runs if it's a bots turn. Makes the decisions for the bot. 
+	 */
 	public void botTurn(){
 		ArrayList<CombButton> buttontemp = new ArrayList<CombButton>();
 		for (int i = 0; i < combs.size(); i++) {
@@ -291,18 +320,29 @@ public class Yatzy {
 			}
 		}
 	}
+	/**
+	 * Resets the combinations and makes sure the bot rolls for the first time
+	 */
 	public void resetCombs(){
 		for(CombButton butt : combs){
 			butt.reset();
 		}
 		rollDice.doClick();
 	}
+	/**
+	 * Resets the dice to the value 0
+	 * Resulting in them not being visible
+	 */
 	public void resetDice(){
 		for(Die die : dice){
 			die.setValue(0);
 			die.setToRoll(true);
 		}
 	}
+	/**
+	 * Adds points when a combination is selected. Then moves on to the next player
+	 * @param points the points you want to add to the current player
+	 */
 	public void calcPoints(int points){
 		currentRolls=0;
 		parts.get(currentPart).addScore(points);
@@ -320,9 +360,13 @@ public class Yatzy {
 		resetDice();
 		resetCombs();
 	}
+	/**
+	 * Checks if there are any rounds left.
+	 * Then asks if you want to play again.
+	 */
 	public void end(){
 		if(MAX_TURNS <= 0){
-			System.out.println("kapa");
+			saveHighscore();
 				int reply = JOptionPane.showConfirmDialog(null, "would you like to starta new game", "New game", JOptionPane.YES_NO_OPTION);
 		        if (reply == JOptionPane.YES_OPTION) {
 		          runner jeng = new runner();
@@ -337,6 +381,10 @@ public class Yatzy {
 		       
 		    }
 	}
+	/**
+	 * Checks and calculates if the player is to get a bonus
+	 * 
+	 */
 	public void calcBonus(){
 		EnumSet <Combinations>bonus = EnumSet.of(
 				Combinations.aces,
@@ -345,7 +393,7 @@ public class Yatzy {
 				Combinations.fours,
 				Combinations.fives,
 				Combinations.sixes);
-		if(parts.get(currentPart).getKeySet().containsAll(bonus)){
+		if(parts.get(currentPart).getKeySet().containsAll(bonus)&&!(parts.get(currentPart).getKeySet().contains(Combinations.bonus))){
 			int points=0;
 			for (Combinations key : bonus) {
 				points+=parts.get(currentPart).getCombPoints(key);
@@ -357,6 +405,10 @@ public class Yatzy {
 			}
 		}
 	}
+	/**
+	 * Returns a string with the info for the current player
+	 * @return the string with the info
+	 */
 	public String updateDetails(){
 		String temp="";
 		int bonus = 0;
@@ -365,9 +417,13 @@ public class Yatzy {
 			temp+=comb.toString()+" : "+parts.get(currentPart).getCombPoints(comb)+"\n";
 			bonus +=parts.get(currentPart).getCombPoints(comb);
 		}
-		temp+="Kvar till bonus: "+(63-bonus);
+		if(bonus<63)temp+="Kvar till bonus: "+(63-bonus);
+		else temp+="Spelare har fått bonus: ";
 		return temp;
 	}
+	/**
+	 * Saves the odds for the combinations
+	 */
 	public void saveCombOdds(){
 		PrintWriter writer = null;
 		try {
@@ -385,6 +441,9 @@ public class Yatzy {
 		}
 		writer.close();
 	}
+	/**
+	 * saves the highscore for the player with the highest score
+	 */
 	public void saveHighscore(){
 		int tempScore = 0;
 		for(Participant p : parts){
@@ -423,6 +482,11 @@ public class Yatzy {
 		}
 		writer.close();
 	}
+	/**
+	 * sorts the list of highscores by their score
+	 * @param list
+	 * @return
+	 */
 	public String[] sortHighscore(String[] list){
 		HashMap<Integer, ArrayList<String>> unsortMap = new HashMap<Integer, ArrayList<String>>();
 		for (int i = 0; i < list.length; i++) {
