@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
@@ -142,6 +143,11 @@ public class runner {
 		});
 		
 	}
+	/**
+	 * Formats the string array from getHighscoreArr 
+	 * into as tring that can be used in a textpane
+	 * @return returns a string with all the highscores
+	 */
 	public static String getHighscores(){
 		String[] temp = getHighscoreArr();
 		String out = "";
@@ -152,6 +158,10 @@ public class runner {
 		
 		return out;
 	}
+	/**
+	 * Creates and reads an highscore file and splits it into a String array
+	 * @return returns a string array with all the highscores currently saved
+	 */
 	public static String[] getHighscoreArr(){
 		InputStream is=null;
 		try {
@@ -159,8 +169,13 @@ public class runner {
 		} catch (FileNotFoundException e) {
 			
 		}
-		String text = new Scanner(is,"UTF-8").useDelimiter("\\A").next();
-		if(text.charAt(text.length()-1)==':'){
+		String text = "";
+		try{
+			text = new Scanner(is,"UTF-8").useDelimiter("\\A").next();
+		} catch(NoSuchElementException e){
+			System.out.println("Highscore is empty");
+		}
+		if(text.length()>0 && text.charAt(text.length()-1)==':'){
 			text = text.substring(0,text.length()-1);
 		}
 		String[] temp = text.split(":");
