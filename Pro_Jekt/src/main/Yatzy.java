@@ -41,8 +41,8 @@ import participant.Participant;
 import participant.Player;
 /**
  * 
- * @author Zydoc
- * Runs a game of yahhahahahahatzyeah
+ * @author Filip
+ * Runs a game of yatzy
  */
 public class Yatzy {
 	static final int MAX_ROLLS_PER_ROUND = 3;
@@ -386,22 +386,24 @@ public class Yatzy {
 	 * 
 	 */
 	public void calcBonus(){
-		EnumSet <Combinations>bonus = EnumSet.of(
-				Combinations.aces,
-				Combinations.twos,
-				Combinations.threes,
-				Combinations.fours,
-				Combinations.fives,
-				Combinations.sixes);
-		if(parts.get(currentPart).getKeySet().containsAll(bonus)&&!(parts.get(currentPart).getKeySet().contains(Combinations.bonus))){
-			int points=0;
-			for (Combinations key : bonus) {
-				points+=parts.get(currentPart).getCombPoints(key);
-				
-			}
-			if(points>=63){
-				parts.get(currentPart).addScore(50);
-				parts.get(currentPart).setCombValue(Combinations.bonus, 50);
+		if(!(parts.get(currentPart).getCombPoints(Combinations.bonus)==50)){
+			EnumSet <Combinations>bonus = EnumSet.of(
+					Combinations.aces,
+					Combinations.twos,
+					Combinations.threes,
+					Combinations.fours,
+					Combinations.fives,
+					Combinations.sixes);
+			if(parts.get(currentPart).getKeySet().containsAll(bonus)){
+				int points=0;
+				for (Combinations key : bonus) {
+					points+=parts.get(currentPart).getCombPoints(key);
+					
+				}
+				if(points>=63) {
+					parts.get(currentPart).addScore(50);
+					parts.get(currentPart).setCombValue(Combinations.bonus, 50);
+				}
 			}
 		}
 	}
