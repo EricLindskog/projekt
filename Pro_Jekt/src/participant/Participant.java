@@ -13,6 +13,7 @@ import die.Die;
  */
 public abstract class Participant {
 	private int score;
+	private int rolls=0;
 	//Keeps track of the amount of points gained for a combination
 	private HashMap <Combinations,Integer> map = new HashMap<Combinations,Integer>();
 
@@ -39,6 +40,17 @@ public abstract class Participant {
 	}
 	public int getCombPoints(Combinations key){
 		return map.get(key);
+	}
+
+	public int getRolls() {
+		return rolls;
+	}
+
+	public void addRoll() {
+		this.rolls +=1;
+	}
+	public void resetRolls(){
+		this.rolls = 0;
 	}
 
 }

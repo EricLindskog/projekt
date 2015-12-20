@@ -177,7 +177,7 @@ public class Yatzy {
 							canRoll=true;
 						}
 					}
-					if(currentRolls<MAX_ROLLS_PER_ROUND&&canRoll){
+					if(parts.get(currentPart).getRolls()<MAX_ROLLS_PER_ROUND&&canRoll){
 						for (int i = 0; i < dice.size(); i++) {
 							if(dice.get(i).isToRoll()){
 								dice.get(i).roll();
@@ -185,7 +185,7 @@ public class Yatzy {
 								dice.get(i).setToRoll(false);
 							}
 						}
-						currentRolls++;
+						parts.get(currentPart).addRoll();
 						calculateCombs();
 						updateScore(scorePanel);
 					}
@@ -200,20 +200,8 @@ public class Yatzy {
 				}
 			});
 			for (int i = 0; i < dice.size(); i++) {
-				dice.get(i).setValue(0);
 				diePanel.add(dice.get(i));
-				dice.get(i).addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e) {
-						updateScore(scorePanel);
-						Object source = e.getSource();
-				        if (source instanceof JButton) {
-				            Die die = (Die)source;
-				            die.setToRoll(!die.isToRoll());
-				        }
-					}
-				});
 			}
-			resetCombs();
 	}
 	/**
 	 * Updates the participants scorepanel with the current score
@@ -242,28 +230,30 @@ public class Yatzy {
 	 */
 	public void calculateCombs(){
 		Collections.sort(dice);
-		int count=0;
+		int unAvailableButtons=0;
 		for(CombButton butt : combs){
 			butt.setClickable(false);
 			butt.calculate(dice);
 			if(!(parts.get(currentPart).getKeySet().contains(butt.getComb()))){
-				
 				if(butt.getPoints()>0){
 					butt.setClickable(true);
 				}
-				else count++;
+				else unAvailableButtons++;
 			}
 			else{
 				butt.reset();
-				count++;
+				unAvailableButtons++;
 			}
 		}
 		
 		if(parts.get(currentPart) instanceof Bot){
 			botTurn();
 		}
-		
-		if(count>=combs.size()&&currentRolls>=3){
+		checkOutOfRolls(unAvailableButtons);
+	}
+	
+	public void checkOutOfRolls(int count){
+		if(count>=combs.size()&&parts.get(currentPart).getRolls()>=3){
 			if(!(parts.get(currentPart) instanceof Bot)){
 				JOptionPane.showMessageDialog(null, "Out of combination, "
 					+ "select one of your remaining to discard"
@@ -299,15 +289,13 @@ public class Yatzy {
 			}
 		}
 		boolean clickComb = false;
-		while(currentRolls<MAX_ROLLS_PER_ROUND && clickComb==false){
-			
-		
+		while(parts.get(currentPart).getRolls()<MAX_ROLLS_PER_ROUND && clickComb==false){
 		 Combinations combtemp = ((Bot)(parts.get(currentPart))).bottPlaying(buttontemp);
 		 
 			if(combtemp==null){
 				for (Die die : dice) {
 					die.roll();
-					currentRolls++;
+					parts.get(currentPart).addRoll();
 				}	
 			}
 			else{
@@ -344,19 +332,16 @@ public class Yatzy {
 	 * @param points the points you want to add to the current player
 	 */
 	public void calcPoints(int points){
-		currentRolls=0;
+		//currentRolls=0;
+		parts.get(currentPart).resetRolls();
 		parts.get(currentPart).addScore(points);
 		MAX_TURNS--;
-		saveCombOdds();
 		calcBonus();
 		end();
 		currentPart++;
 		if(currentPart>=parts.size()){
 			currentPart=0;
 		}
-		System.out.println("Spelare: "+(currentPart+1)+" tur");
-		System.out.println("Har poäng: "+parts.get(currentPart).getScore());
-		
 		resetDice();
 		resetCombs();
 	}
@@ -366,7 +351,8 @@ public class Yatzy {
 	 */
 	public void end(){
 		if(MAX_TURNS <= 0){
-			saveHighscore();
+			saveCombOdds();
+			Highscores.saveHighscore(parts);
 				int reply = JOptionPane.showConfirmDialog(null, "would you like to starta new game", "New game", JOptionPane.YES_NO_OPTION);
 		        if (reply == JOptionPane.YES_OPTION) {
 		          runner jeng = new runner();
@@ -375,7 +361,6 @@ public class Yatzy {
 		          
 		        }
 		        else {
-		           //JOptionPane.showMessageDialog(null, "GOODBYE");
 		           System.exit(0);
 		        }
 		       
@@ -386,7 +371,7 @@ public class Yatzy {
 	 * 
 	 */
 	public void calcBonus(){
-		if(!(parts.get(currentPart).getCombPoints(Combinations.bonus)==50)){
+		if(!(parts.get(currentPart).getKeySet().contains(Combinations.bonus))){
 			EnumSet <Combinations>bonus = EnumSet.of(
 					Combinations.aces,
 					Combinations.twos,
@@ -415,9 +400,18 @@ public class Yatzy {
 		String temp="";
 		int bonus = 0;
 		temp+="Spelare"+(currentPart+1)+":s poäng och bonusar\n";
+		EnumSet <Combinations>bonusSet = EnumSet.of(
+				Combinations.aces,
+				Combinations.twos,
+				Combinations.threes,
+				Combinations.fours,
+				Combinations.fives,
+				Combinations.sixes);
 		for (Combinations comb : parts.get(currentPart).getKeySet()){
-			temp+=comb.toString()+" : "+parts.get(currentPart).getCombPoints(comb)+"\n";
-			bonus +=parts.get(currentPart).getCombPoints(comb);
+			if(bonusSet.contains(comb)){
+				temp+=comb.toString()+" : "+parts.get(currentPart).getCombPoints(comb)+"\n";
+				bonus +=parts.get(currentPart).getCombPoints(comb);	
+			}
 		}
 		if(bonus<63)temp+="Kvar till bonus: "+(63-bonus);
 		else temp+="Spelare har fått bonus: ";
@@ -443,92 +437,5 @@ public class Yatzy {
 		}
 		writer.close();
 	}
-	/**
-	 * saves the highscore for the player with the highest score
-	 */
-	public void saveHighscore(){
-		int tempScore = 0;
-		for(Participant p : parts){
-			if(p instanceof Player){
-				if(p.getScore()>tempScore){
-					tempScore = p.getScore();
-				}
-			}
-		}
-		String input = JOptionPane.showInputDialog("Skriv in namn för nytt highscore");
-		String newScore = input+" "+tempScore+":";
-		String[] templist = runner.getHighscoreArr();
-		String[] list = new String[templist.length+1];
-		list[0] = newScore;
-		for (int i = 0; i < templist.length; i++) {
-			list[i+1] = templist[i];
-		}
-		
-		list = sortHighscore(list);
-		
-		PrintWriter writer = null;
-		try {
-			writer = new PrintWriter("highscore.txt", "UTF-8");
-		} catch (FileNotFoundException e) {
-			System.out.println("sdadad");
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		for (int i = 0; i < list.length; i++) {
-			if(list[i].length()>0){
-				writer.print(list[i]+":");
-			}
-		}
-		writer.close();
-	}
-	/**
-	 * sorts the list of highscores by their score
-	 * @param list
-	 * @return
-	 */
-	public String[] sortHighscore(String[] list){
-		HashMap<Integer, ArrayList<String>> unsortMap = new HashMap<Integer, ArrayList<String>>();
-		for (int i = 0; i < list.length; i++) {
-			String[] temp = list[i].split(" ");
-			temp[0]=temp[0].replaceAll(":", "");
-			temp[1]=temp[1].replaceAll(":", "");
-			int key = Integer.parseInt(temp[1]);
-			if(unsortMap.containsKey(key)){
-				unsortMap.get(key).add(temp[0]);
-			}else{
-				ArrayList<String>values = new ArrayList<String>();
-				values.add(temp[0]);
-				unsortMap.put(key,values);
-			}
-			
-		}
-		Map<Integer, ArrayList <String>> treeMap = new TreeMap<Integer, ArrayList <String>>(
-				new Comparator<Integer>() {
 
-				public int compare(Integer o1, Integer o2) {
-					return o2.compareTo(o1);
-				}
-
-		});
-		treeMap.putAll(unsortMap);
-		for (int key : treeMap.keySet()) {
-			for(String value : treeMap.get(key)){
-				System.out.println(key+" "+value);
-			}
-		}
-		System.out.println("map");
-		int i = 0;
-		for(int key : treeMap.keySet()){
-			for(String value : treeMap.get(key)){
-				list[i] = value+" "+key;
-				System.out.println(list[i]);
-				i++;
-			}
-		}
-		System.out.println("tjena");
-		return list;
-	}
 }

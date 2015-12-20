@@ -1,6 +1,8 @@
 package die;
 
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
@@ -22,6 +24,18 @@ public class Die extends JButton implements Comparable<Die> {
 	/**
 	 * "Rolls the die" sets the value of the die to a random number between 1 and 6
 	 */
+	public Die(){
+		this.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				Object source = e.getSource();
+		        if (source instanceof JButton) {
+		            Die die = (Die)source;
+		            die.setToRoll(!die.isToRoll());
+		        }
+			}
+		});
+		this.setValue(0);
+	}
 	public void roll(){
 		this.setVisible(true);
 		setValue(roll.nextInt(6)+1);

@@ -119,7 +119,7 @@ public class runner {
 		
 		frame.add(partsPanel);;
 		frame.add(highScorepanel);
-		highScoreField.setText(getHighscores());
+		highScoreField.setText(Highscores.getHighscores());
 		
 		playButton.addActionListener(new ActionListener(){
 
@@ -142,43 +142,5 @@ public class runner {
 			
 		});
 		
-	}
-	/**
-	 * Formats the string array from getHighscoreArr 
-	 * into as tring that can be used in a textpane
-	 * @return returns a string with all the highscores
-	 */
-	public static String getHighscores(){
-		String[] temp = getHighscoreArr();
-		String out = "";
-		for (int i = 0; i < temp.length; i++) {
-			out+=temp[i]+" \n";
-		}
-		
-		
-		return out;
-	}
-	/**
-	 * Creates and reads an highscore file and splits it into a String array
-	 * @return returns a string array with all the highscores currently saved
-	 */
-	public static String[] getHighscoreArr(){
-		InputStream is=null;
-		try {
-			is = new FileInputStream("highscore.txt");
-		} catch (FileNotFoundException e) {
-			
-		}
-		String text = "";
-		try{
-			text = new Scanner(is,"UTF-8").useDelimiter("\\A").next();
-		} catch(NoSuchElementException e){
-			System.out.println("Highscore is empty");
-		}
-		if(text.length()>0 && text.charAt(text.length()-1)==':'){
-			text = text.substring(0,text.length()-1);
-		}
-		String[] temp = text.split(":");
-		return temp;
 	}
 }
